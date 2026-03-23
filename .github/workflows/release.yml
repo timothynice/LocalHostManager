@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Make scripts executable
         run: chmod +x scripts/*.sh
@@ -72,7 +72,7 @@ jobs:
         run: ./scripts/package-release.sh
 
       - name: Upload workflow artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: LocalHostManager-${{ env.APP_VERSION }}
           path: |
