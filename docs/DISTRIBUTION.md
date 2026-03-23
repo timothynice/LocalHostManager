@@ -61,5 +61,29 @@ If those secrets are missing, the workflow still builds release artifacts, but t
 - Enroll in the Apple Developer Program if you have not already
 - Create/export a `Developer ID Application` certificate as `.p12`
 - Create an app-specific password for notarization, or switch the scripts to App Store Connect API keys
-- Push the repo to GitHub and create/push a `v*` tag
+- Create and push a `v*` tag when you are ready to publish a release
 - Decide whether you also want a Homebrew cask or Sparkle-based auto-update flow
+
+## Apple signing checklist
+
+Public GitHub releases need a `Developer ID Application` certificate. An `Apple Development` certificate is not enough for outside-the-App-Store distribution.
+
+Recommended setup:
+
+1. Create or download a `Developer ID Application` certificate for your Apple Developer team.
+2. Export the certificate and private key from Keychain Access as a password-protected `.p12`.
+3. Base64-encode that `.p12` for the `APPLE_DEVELOPER_ID_CERT_P12_BASE64` GitHub secret.
+4. Add the certificate password, signing identity string, team ID, and notarization credentials as GitHub repository secrets.
+
+To export the certificate from Keychain Access:
+
+1. Open Keychain Access.
+2. Select the `Developer ID Application` certificate together with its private key.
+3. Choose `File > Export Items`.
+4. Save it as a password-protected `.p12`.
+
+You can then base64-encode it with:
+
+```bash
+base64 -i developer-id-cert.p12 | pbcopy
+```
