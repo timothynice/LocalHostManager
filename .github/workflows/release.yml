@@ -34,11 +34,15 @@ jobs:
           echo "BUILD_NUMBER=${GITHUB_RUN_NUMBER}" >> "$GITHUB_ENV"
 
       - name: Import Developer ID certificate
-        if: ${{ secrets.APPLE_DEVELOPER_ID_CERT_P12_BASE64 != '' && secrets.APPLE_DEVELOPER_ID_CERT_PASSWORD != '' && secrets.APPLE_DEVELOPER_ID_IDENTITY != '' }}
         env:
           APPLE_DEVELOPER_ID_CERT_P12_BASE64: ${{ secrets.APPLE_DEVELOPER_ID_CERT_P12_BASE64 }}
           APPLE_DEVELOPER_ID_CERT_PASSWORD: ${{ secrets.APPLE_DEVELOPER_ID_CERT_PASSWORD }}
         run: |
+          if [[ -z "$APPLE_DEVELOPER_ID_CERT_P12_BASE64" || -z "$APPLE_DEVELOPER_ID_CERT_PASSWORD" ]]; then
+            echo "No Developer ID certificate secrets present. Building unsigned artifacts."
+            exit 0
+          fi
+
           python3 - <<'PY'
           import base64, os, pathlib
           pathlib.Path("developer-id-cert.p12").write_bytes(
