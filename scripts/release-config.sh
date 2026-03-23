@@ -1,0 +1,33 @@
+#!/bin/zsh
+
+: "${APP_NAME:=LocalHostManager}"
+: "${APP_DISPLAY_NAME:=$APP_NAME}"
+: "${BUNDLE_ID:=com.localhostmanager.app}"
+: "${MIN_MACOS_VERSION:=14.0}"
+: "${BUILD_CONFIGURATION:=release}"
+
+if [[ -z "${APP_VERSION:-}" ]]; then
+  if [[ -f "$ROOT_DIR/VERSION" ]]; then
+    APP_VERSION="$(tr -d '[:space:]' < "$ROOT_DIR/VERSION")"
+  else
+    APP_VERSION="0.1.0"
+  fi
+fi
+
+: "${BUILD_NUMBER:=1}"
+: "${RELEASE_TAG:=v$APP_VERSION}"
+
+DIST_DIR="$ROOT_DIR/dist"
+APP_DIR="$DIST_DIR/$APP_NAME.app"
+APP_CONTENTS_DIR="$APP_DIR/Contents"
+MACOS_DIR="$APP_CONTENTS_DIR/MacOS"
+RESOURCES_DIR="$APP_CONTENTS_DIR/Resources"
+INFO_PLIST_PATH="$APP_CONTENTS_DIR/Info.plist"
+
+ICONSET_DIR="$ROOT_DIR/.build/AppIcon.iconset"
+ICON_ICNS_PATH="$ROOT_DIR/.build/AppIcon.icns"
+
+BINARY_PATH="$ROOT_DIR/.build/$BUILD_CONFIGURATION/$APP_NAME"
+ZIP_PATH="$DIST_DIR/$APP_NAME-$APP_VERSION.zip"
+DMG_PATH="$DIST_DIR/$APP_NAME-$APP_VERSION.dmg"
+CHECKSUM_PATH="$DIST_DIR/$APP_NAME-$APP_VERSION-sha256.txt"
