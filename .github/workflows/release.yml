@@ -91,5 +91,5 @@ jobs:
           gh release view "$RELEASE_TAG" >/dev/null 2>&1 \
             && gh release upload "$RELEASE_TAG" dist/*.zip dist/*.dmg dist/*-sha256.txt --clobber \
             || gh release create "$RELEASE_TAG" dist/*.zip dist/*.dmg dist/*-sha256.txt \
-              --title "Studi0 Ports $APP_VERSION" \
+              --title "Studi0Ports $APP_VERSION" \
               --generate-notes

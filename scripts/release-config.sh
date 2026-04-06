@@ -1,7 +1,7 @@
 #!/bin/zsh
 
 : "${APP_BINARY_NAME:=Studi0Ports}"
-: "${APP_BUNDLE_NAME:=Studi0 Ports}"
+: "${APP_BUNDLE_NAME:=Studi0Ports}"
 : "${APP_DISPLAY_NAME:=$APP_BUNDLE_NAME}"
 : "${BUNDLE_ID:=com.studi0ports.app}"
 : "${MIN_MACOS_VERSION:=14.0}"

@@ -1,6 +1,6 @@
 # Distribution
 
-Studi0 Ports is currently source-first. The recommended way to share it is to publish the repo and have developers build it locally on their own Macs.
+Studi0Ports is currently source-first. The recommended way to share it is to publish the repo and have developers build it locally on their own Macs.
 
 ## Recommended install flow
 
@@ -12,7 +12,7 @@ cd LocalHostManager
 ./scripts/install-app.sh
 ```
 
-That builds the app, installs `Studi0 Ports.app` into `/Applications`, and opens it.
+That builds the app, installs `Studi0Ports.app` into `/Applications`, and opens it.
 
 If someone only wants a local bundle in `dist/` without installing it:
 

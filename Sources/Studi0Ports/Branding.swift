@@ -1,7 +1,7 @@
 import AppKit
 
 enum AppBrand {
-    static let displayName = "Studi0 Ports"
+    static let displayName = "Studi0Ports"
     static let binaryName = "Studi0Ports"
     static let bundleIdentifier = "com.studi0ports.app"
     static let statusAccent = NSColor(
