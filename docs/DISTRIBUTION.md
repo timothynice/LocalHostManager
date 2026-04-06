@@ -1,6 +1,6 @@
 # Distribution
 
-LocalHostManager is currently source-first. The recommended way to share it is to publish the repo and have developers build it locally on their own Macs.
+Studi0 Ports is currently source-first. The recommended way to share it is to publish the repo and have developers build it locally on their own Macs.
 
 ## Recommended install flow
 
@@ -12,7 +12,7 @@ cd LocalHostManager
 ./scripts/dev-setup.sh
 ```
 
-That builds a local `dist/LocalHostManager.app` bundle and opens it.
+That builds a local `dist/Studi0 Ports.app` bundle and opens it.
 
 If someone only wants to run it directly from SwiftPM:
 

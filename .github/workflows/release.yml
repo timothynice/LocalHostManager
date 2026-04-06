@@ -77,7 +77,7 @@ jobs:
       - name: Upload workflow artifacts
         uses: actions/upload-artifact@v7
         with:
-          name: LocalHostManager-${{ env.APP_VERSION }}
+          name: Studi0Ports-${{ env.APP_VERSION }}
           path: |
             dist/*.zip
             dist/*.dmg
@@ -91,5 +91,5 @@ jobs:
           gh release view "$RELEASE_TAG" >/dev/null 2>&1 \
             && gh release upload "$RELEASE_TAG" dist/*.zip dist/*.dmg dist/*-sha256.txt --clobber \
             || gh release create "$RELEASE_TAG" dist/*.zip dist/*.dmg dist/*-sha256.txt \
-              --title "LocalHostManager $APP_VERSION" \
+              --title "Studi0 Ports $APP_VERSION" \
               --generate-notes

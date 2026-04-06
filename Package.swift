@@ -2,19 +2,19 @@
 import PackageDescription
 
 let package = Package(
-    name: "LocalHostManager",
+    name: "Studi0Ports",
     platforms: [
         .macOS(.v14),
     ],
     products: [
         .executable(
-            name: "LocalHostManager",
-            targets: ["LocalHostManager"]
+            name: "Studi0Ports",
+            targets: ["Studi0Ports"]
         ),
     ],
     targets: [
         .executableTarget(
-            name: "LocalHostManager"
+            name: "Studi0Ports"
         ),
     ]
 )

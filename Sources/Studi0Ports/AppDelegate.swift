@@ -35,12 +35,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelegate {
             return
         }
 
-        button.image = StatusItemIcon.make()
+        button.image = BrandStatusIcon.statusItem
         button.imagePosition = .imageOnly
         button.imageScaling = .scaleProportionallyDown
         button.target = self
         button.action = #selector(togglePopover(_:))
-        button.toolTip = "LocalHostManager"
+        button.toolTip = AppBrand.displayName
     }
 
     private func configurePopover() {
@@ -62,14 +62,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelegate {
 
     private func tooltip(for count: Int) -> String {
         if count == 0 {
-            return "LocalHostManager: no dev servers detected"
+            return "\(AppBrand.displayName): no dev servers detected"
         }
 
         if count == 1 {
-            return "LocalHostManager: 1 dev server detected"
+            return "\(AppBrand.displayName): 1 dev server detected"
         }
 
-        return "LocalHostManager: \(count) dev servers detected"
+        return "\(AppBrand.displayName): \(count) dev servers detected"
     }
 
     @objc
@@ -88,19 +88,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelegate {
         popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
         popover.contentViewController?.view.window?.makeKey()
         button.highlight(true)
-    }
-}
-
-private enum StatusItemIcon {
-    static func make() -> NSImage {
-        let configuration = NSImage.SymbolConfiguration(pointSize: 14, weight: .semibold)
-        let image = NSImage(
-            systemSymbolName: "server.rack",
-            accessibilityDescription: "Local servers"
-        )?.withSymbolConfiguration(configuration) ?? NSImage()
-        image.isTemplate = true
-        image.size = NSSize(width: 16, height: 16)
-        return image
     }
 }
 
@@ -163,9 +150,11 @@ private struct PopoverView: View {
 
     private var header: some View {
         HStack(alignment: .center, spacing: 12) {
-            Image(systemName: "server.rack")
-                .font(.system(size: 18, weight: .semibold))
-                .foregroundStyle(.secondary)
+            Image(nsImage: BrandStatusIcon.popover)
+                .interpolation(.high)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .padding(6)
                 .frame(width: 32, height: 32)
                 .background(
                     RoundedRectangle(cornerRadius: 10, style: .continuous)
@@ -173,7 +162,7 @@ private struct PopoverView: View {
                 )
 
             VStack(alignment: .leading, spacing: 3) {
-                Text("Local Servers")
+                Text(AppBrand.displayName)
                     .font(.system(size: 17, weight: .semibold))
 
                 Text(summaryText)
@@ -279,7 +268,7 @@ private struct PopoverView: View {
                 .toggleStyle(.switch)
                 .controlSize(.small)
                 .font(.caption)
-                .help("Launch LocalHostManager automatically the next time you sign in")
+                .help("Launch \(AppBrand.displayName) automatically the next time you sign in")
 
                 Button("Quit", action: monitor.quit)
                     .buttonStyle(.bordered)

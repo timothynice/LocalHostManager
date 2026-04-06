@@ -1,4 +1,4 @@
-# LocalHostManager
+# Studi0 Ports
 
 Native macOS menu bar app for spotting local dev servers by project name and port, then opening or stopping them.
 
@@ -19,7 +19,7 @@ cd LocalHostManager
 ./scripts/dev-setup.sh
 ```
 
-That command builds `dist/LocalHostManager.app` and opens it.
+That command builds `dist/Studi0 Ports.app` and opens it.
 
 If you want to run it without creating the app bundle:
 

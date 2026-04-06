@@ -35,7 +35,7 @@ cp -R "$APP_DIR" "$STAGING_DIR/"
 ln -s /Applications "$STAGING_DIR/Applications"
 
 hdiutil create \
-  -volname "$APP_NAME" \
+  -volname "$APP_DISPLAY_NAME" \
   -srcfolder "$STAGING_DIR" \
   -ov \
   -format UDZO \

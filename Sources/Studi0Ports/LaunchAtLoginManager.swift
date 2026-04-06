@@ -22,7 +22,7 @@ final class LaunchAtLoginManager: ObservableObject {
                 return
             case .requiresApproval:
                 isEnabled = true
-                lastError = "Approve LocalHostManager in System Settings > Login Items to finish enabling start at login."
+                lastError = "Approve \(AppBrand.displayName) in System Settings > Login Items to finish enabling start at login."
                 return
             case .notRegistered, .notFound:
                 break
@@ -51,7 +51,7 @@ final class LaunchAtLoginManager: ObservableObject {
         refresh()
 
         if enabled, #available(macOS 13.0, *), useModernLoginItemAPI, SMAppService.mainApp.status == .requiresApproval {
-            lastError = "Approve LocalHostManager in System Settings > Login Items to finish enabling start at login."
+            lastError = "Approve \(AppBrand.displayName) in System Settings > Login Items to finish enabling start at login."
         } else {
             lastError = nil
         }
@@ -170,7 +170,7 @@ final class LaunchAtLoginManager: ObservableObject {
     }
 
     private var agentLabel: String {
-        (Bundle.main.bundleIdentifier ?? "com.localhostmanager.app") + ".launch-at-login"
+        (Bundle.main.bundleIdentifier ?? AppBrand.bundleIdentifier) + ".launch-at-login"
     }
 
     private var legacyLaunchAgentURL: URL {

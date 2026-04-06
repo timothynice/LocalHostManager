@@ -9,10 +9,10 @@ swift build -c "$BUILD_CONFIGURATION" --package-path "$ROOT_DIR"
 rm -rf "$APP_DIR" "$ICONSET_DIR" "$ICON_ICNS_PATH"
 mkdir -p "$MACOS_DIR" "$RESOURCES_DIR"
 
-swift "$ROOT_DIR/scripts/generate-app-icon.swift" "$ICONSET_DIR"
+swift "$ROOT_DIR/scripts/generate-app-icon.swift" "$ICON_SOURCE_PATH" "$ICONSET_DIR"
 xcrun iconutil -c icns "$ICONSET_DIR" -o "$ICON_ICNS_PATH"
 
-cp "$BINARY_PATH" "$MACOS_DIR/$APP_NAME"
+cp "$BINARY_PATH" "$MACOS_DIR/$APP_BINARY_NAME"
 cp "$ICON_ICNS_PATH" "$RESOURCES_DIR/AppIcon.icns"
 
 cat > "$INFO_PLIST_PATH" <<EOF
@@ -25,7 +25,7 @@ cat > "$INFO_PLIST_PATH" <<EOF
     <key>CFBundleDisplayName</key>
     <string>$APP_DISPLAY_NAME</string>
     <key>CFBundleExecutable</key>
-    <string>$APP_NAME</string>
+    <string>$APP_BINARY_NAME</string>
     <key>CFBundleIconFile</key>
     <string>AppIcon.icns</string>
     <key>CFBundleIdentifier</key>
@@ -33,7 +33,7 @@ cat > "$INFO_PLIST_PATH" <<EOF
     <key>CFBundleInfoDictionaryVersion</key>
     <string>6.0</string>
     <key>CFBundleName</key>
-    <string>$APP_NAME</string>
+    <string>$APP_DISPLAY_NAME</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleShortVersionString</key>

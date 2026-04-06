@@ -4,12 +4,18 @@ import AppKit
 import Foundation
 
 let arguments = CommandLine.arguments
-guard arguments.count == 2 else {
-    fputs("Usage: generate-app-icon.swift <iconset-output-dir>\n", stderr)
+guard arguments.count == 3 else {
+    fputs("Usage: generate-app-icon.swift <source-png> <iconset-output-dir>\n", stderr)
     exit(1)
 }
 
-let outputDirectory = URL(fileURLWithPath: arguments[1], isDirectory: true)
+let sourceURL = URL(fileURLWithPath: arguments[1])
+guard let sourceImage = NSImage(contentsOf: sourceURL) else {
+    fputs("Couldn't load source icon at \(sourceURL.path)\n", stderr)
+    exit(1)
+}
+
+let outputDirectory = URL(fileURLWithPath: arguments[2], isDirectory: true)
 try? FileManager.default.removeItem(at: outputDirectory)
 try FileManager.default.createDirectory(at: outputDirectory, withIntermediateDirectories: true)
 
@@ -31,7 +37,8 @@ for (filename, dimension) in iconSizes {
     let image = NSImage(size: size)
 
     image.lockFocus()
-    drawIcon(in: NSRect(origin: .zero, size: size))
+    NSGraphicsContext.current?.imageInterpolation = .high
+    drawIcon(sourceImage, in: NSRect(origin: .zero, size: size))
     image.unlockFocus()
 
     guard
@@ -45,81 +52,30 @@ for (filename, dimension) in iconSizes {
     try pngData.write(to: outputDirectory.appendingPathComponent(filename), options: .atomic)
 }
 
-func drawIcon(in rect: NSRect) {
-    let scale = rect.width / 1024
-    let backgroundRect = rect.insetBy(dx: 72 * scale, dy: 72 * scale)
-    let borderWidth = max(2, 8 * scale)
-    let cornerRadius = 220 * scale
-
-    let shadow = NSShadow()
-    shadow.shadowBlurRadius = 40 * scale
-    shadow.shadowOffset = NSSize(width: 0, height: -18 * scale)
-    shadow.shadowColor = NSColor.black.withAlphaComponent(0.16)
-    shadow.set()
-
-    let gradient = NSGradient(colors: [
-        NSColor(calibratedWhite: 0.22, alpha: 1),
-        NSColor(calibratedWhite: 0.14, alpha: 1),
-    ])!
-    let backgroundPath = NSBezierPath(roundedRect: backgroundRect, xRadius: cornerRadius, yRadius: cornerRadius)
-    gradient.draw(in: backgroundPath, angle: -90)
-
-    NSColor(calibratedWhite: 1, alpha: 0.08).setStroke()
-    backgroundPath.lineWidth = borderWidth
-    backgroundPath.stroke()
-
-    let glowRect = NSRect(
-        x: rect.minX + 620 * scale,
-        y: rect.minY + 710 * scale,
-        width: 250 * scale,
-        height: 250 * scale
-    )
-    let glowPath = NSBezierPath(ovalIn: glowRect)
-    NSColor.systemBlue.withAlphaComponent(0.22).setFill()
-    glowPath.fill()
-
-    let plateRect = NSRect(
-        x: rect.minX + 212 * scale,
-        y: rect.minY + 210 * scale,
-        width: 600 * scale,
-        height: 600 * scale
-    )
-    let platePath = NSBezierPath(roundedRect: plateRect, xRadius: 150 * scale, yRadius: 150 * scale)
-    NSColor(calibratedWhite: 0.1, alpha: 0.96).setFill()
-    platePath.fill()
-
-    NSColor.systemBlue.withAlphaComponent(0.18).setStroke()
-    platePath.lineWidth = max(2, 6 * scale)
-    platePath.stroke()
-
-    let symbolConfig = NSImage.SymbolConfiguration(pointSize: 300 * scale, weight: .bold)
-    let symbol = NSImage(
-        systemSymbolName: "server.rack",
-        accessibilityDescription: "LocalHostManager"
-    )?.withSymbolConfiguration(symbolConfig)
-
-    if let symbol {
-        let symbolRect = NSRect(
-            x: rect.minX + 330 * scale,
-            y: rect.minY + 308 * scale,
-            width: 360 * scale,
-            height: 360 * scale
-        )
-
-        symbol.lockFocus()
-        NSColor.white.set()
-        NSRect(origin: .zero, size: symbol.size).fill(using: .sourceAtop)
-        symbol.unlockFocus()
-        symbol.draw(in: symbolRect)
+func drawIcon(_ sourceImage: NSImage, in rect: NSRect) {
+    let sourceSize = sourceImage.size
+    guard sourceSize.width > 0, sourceSize.height > 0 else {
+        return
     }
 
-    let indicatorRect = NSRect(
-        x: rect.minX + 665 * scale,
-        y: rect.minY + 635 * scale,
-        width: 74 * scale,
-        height: 74 * scale
+    let sourceAspect = sourceSize.width / sourceSize.height
+    let targetAspect = rect.width / rect.height
+
+    let drawRect: NSRect
+    if sourceAspect > targetAspect {
+        let width = rect.height * sourceAspect
+        drawRect = NSRect(x: rect.midX - width / 2, y: rect.minY, width: width, height: rect.height)
+    } else {
+        let height = rect.width / sourceAspect
+        drawRect = NSRect(x: rect.minX, y: rect.midY - height / 2, width: rect.width, height: height)
+    }
+
+    sourceImage.draw(
+        in: drawRect,
+        from: NSRect(origin: .zero, size: sourceSize),
+        operation: .sourceOver,
+        fraction: 1,
+        respectFlipped: true,
+        hints: [.interpolation: NSImageInterpolation.high]
     )
-    let indicatorPath = NSBezierPath(ovalIn: indicatorRect)
-    NSColor.systemBlue.setFill()
-    indicatorPath.fill()
 }

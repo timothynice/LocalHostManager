@@ -2,7 +2,8 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
-APP_PATH="$ROOT_DIR/dist/LocalHostManager.app"
+source "$ROOT_DIR/scripts/release-config.sh"
+APP_PATH="$APP_DIR"
 
 if ! xcode-select -p >/dev/null 2>&1; then
   echo "Xcode Command Line Tools are required. Run 'xcode-select --install' and try again." >&2
