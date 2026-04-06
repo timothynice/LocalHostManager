@@ -47,7 +47,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelegate {
         let rootView = PopoverView(monitor: monitor, launchAtLoginManager: launchAtLoginManager)
         popover.animates = true
         popover.behavior = .transient
-        popover.contentSize = NSSize(width: 460, height: 540)
+        popover.contentSize = popoverSize(forServerCount: 0)
         popover.delegate = self
         popover.contentViewController = NSHostingController(rootView: rootView)
     }
@@ -56,8 +56,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelegate {
         monitor.$servers
             .sink { [weak self] servers in
                 self?.statusItem.button?.toolTip = self?.tooltip(for: servers.count)
+                self?.popover.contentSize = self?.popoverSize(forServerCount: servers.count) ?? NSSize(width: 460, height: 420)
             }
             .store(in: &cancellables)
+    }
+
+    private func popoverSize(forServerCount count: Int) -> NSSize {
+        if count == 0 {
+            return NSSize(width: 460, height: 420)
+        }
+
+        return NSSize(width: 460, height: 540)
     }
 
     private func tooltip(for count: Int) -> String {
@@ -220,7 +229,7 @@ private struct PopoverView: View {
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
         }
-        .frame(maxWidth: .infinity, minHeight: 240)
+        .frame(maxWidth: .infinity, minHeight: 170, maxHeight: 190)
         .padding(.horizontal, 30)
         .background(
             RoundedRectangle(cornerRadius: 18, style: .continuous)
