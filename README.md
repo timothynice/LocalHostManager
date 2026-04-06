@@ -21,6 +21,12 @@ cd LocalHostManager
 
 That command builds `dist/Studi0 Ports.app` and opens it.
 
+To install it into `/Applications`:
+
+```bash
+./scripts/install-app.sh
+```
+
 If you want to run it without creating the app bundle:
 
 ```bash
@@ -42,6 +48,12 @@ Build the local app bundle:
 
 ```bash
 ./scripts/build-app.sh
+```
+
+Build and install the app into `/Applications`:
+
+```bash
+./scripts/install-app.sh
 ```
 
 Create optional local binary artifacts for your own testing:

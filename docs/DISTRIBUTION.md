@@ -9,10 +9,16 @@ Users should install it like this:
 ```bash
 git clone https://github.com/timothynice/LocalHostManager.git
 cd LocalHostManager
-./scripts/dev-setup.sh
+./scripts/install-app.sh
 ```
 
-That builds a local `dist/Studi0 Ports.app` bundle and opens it.
+That builds the app, installs `Studi0 Ports.app` into `/Applications`, and opens it.
+
+If someone only wants a local bundle in `dist/` without installing it:
+
+```bash
+./scripts/dev-setup.sh
+```
 
 If someone only wants to run it directly from SwiftPM:
 
