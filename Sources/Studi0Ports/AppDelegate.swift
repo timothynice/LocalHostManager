@@ -47,7 +47,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelegate {
         let rootView = PopoverView(monitor: monitor, launchAtLoginManager: launchAtLoginManager)
         popover.animates = true
         popover.behavior = .transient
-        popover.contentSize = popoverSize(forServerCount: 0)
+        popover.contentSize = NSSize(width: 460, height: 540)
         popover.delegate = self
         popover.contentViewController = NSHostingController(rootView: rootView)
     }
@@ -56,17 +56,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelegate {
         monitor.$servers
             .sink { [weak self] servers in
                 self?.statusItem.button?.toolTip = self?.tooltip(for: servers.count)
-                self?.popover.contentSize = self?.popoverSize(forServerCount: servers.count) ?? NSSize(width: 460, height: 420)
             }
             .store(in: &cancellables)
-    }
-
-    private func popoverSize(forServerCount count: Int) -> NSSize {
-        if count == 0 {
-            return NSSize(width: 460, height: 420)
-        }
-
-        return NSSize(width: 460, height: 540)
     }
 
     private func tooltip(for count: Int) -> String {
@@ -152,7 +143,7 @@ private struct PopoverView: View {
             footer
         }
         .padding(18)
-        .frame(width: 460)
+        .frame(width: 460, height: 540, alignment: .top)
         .animation(.spring(response: 0.34, dampingFraction: 0.84, blendDuration: 0.08), value: visibleServers.map(\.id))
         .animation(.easeInOut(duration: 0.18), value: summaryText)
     }
@@ -196,6 +187,7 @@ private struct PopoverView: View {
         if visibleServers.isEmpty {
             emptyState
                 .transition(.serverCard)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         } else {
             ScrollView {
                 LazyVStack(spacing: 12) {
@@ -211,7 +203,7 @@ private struct PopoverView: View {
                 .padding(.horizontal, 3)
                 .padding(.vertical, 3)
             }
-            .frame(maxHeight: 390)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             .transition(.opacity.combined(with: .scale(scale: 0.985)))
         }
     }
