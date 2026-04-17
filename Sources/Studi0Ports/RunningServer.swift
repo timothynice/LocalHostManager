@@ -17,7 +17,7 @@ struct RunningServer: Identifiable, Equatable, Hashable {
     var browserURL: URL? {
         var components = URLComponents()
         components.scheme = prefersSecureScheme ? "https" : "http"
-        components.host = "127.0.0.1"
+        components.host = "localhost"
         components.port = port
         return components.url
     }
